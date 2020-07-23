@@ -1,20 +1,30 @@
 {% extends "base.html.twig" %}
 
 {% block header %}
-<header>
-    {% include 'navbar.html.twig' %}
-</header>
+    <header>
+        {% include 'navbar.html.twig' %}
+    </header>
 {% endblock %}
 
 {% block body %}
-<body>
-<div class="card" style="width: 18rem;">
-    <img class="card-img-top" src="..." alt="Card image cap">
-    <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+    <body>
+    <div class="jumbotron" style="background-image: url(https://carasaga.com/wp-content/uploads/2018/11/banniere_bijoux_4.jpg); background-size: 100%">
     </div>
-</div>
-</body>
+    {% for product in products %}
+    <div class="col-4 mt-4">
+        <div class="border border-dark rounded p-2 clearfix">
+            <h2>
+                Nom du produit
+            </h2>
+            <img class="img-fluid rounded" src="#" alt="Image de #">
+            <hr>
+            <form action="{{ path('cart_add', {'id': product.id}) }}" method="post">
+                <button type="submit" class="btn btn-success float-right">
+                    <i class="fas fa-shopping-cart mr-1"></i>
+                    Ajouter
+                </button></form>
+        </div>
+    </div>
+    {% endfor %}
+    </body>
 {% endblock %}

@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductsRepository;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ProductsRepository::class)
+ * @ORM\Entity(repositoryClass=ProductRepository::class)
  */
-class Products
+class Product
 {
     /**
      * @ORM\Id()
@@ -33,7 +33,7 @@ class Products
     private $photo;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="product")
      */
     private $category;
 
