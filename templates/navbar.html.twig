@@ -7,14 +7,20 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {#{% for category in categories %}
+                <a class="nav-link dropdown-toggle" href="{{ path('category_show', {'id': category.id}) }}"
+                   id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Choisissez votre type de bijoux
                 </a>
-                {#{% for category in categories %}
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{{ path('category_show', {'id': category.id}) }}">{{ category.name }}</a
-                    {% endfor %}#}
-                </div>
+                    {% endfor %}
+                </div>#}
+            </li>
+            <li>
+                <a class="nav-item">
+                    <a class="nav-link" href="{{ path('cart_index') }}">Panier</a>
+                </a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">

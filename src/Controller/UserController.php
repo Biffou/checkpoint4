@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\EditPasswordType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/user")
@@ -29,7 +31,7 @@ class UserController extends AbstractController
     /**
      * @Route("/new", name="user_new", methods={"GET","POST"})
      */
-    public function new(Request $request, MailerInterface $mailer): Response
+    public function new(Request $request, MailerInterface $mailer, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -39,6 +41,23 @@ class UserController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
+
+            return $this->redirectToRoute('user_show', ['id' => $user->getId()]);
+        }
+
+        $passForm = $this->createForm(EditPasswordType::class, $user);
+        $passForm->handleRequest($request);
+
+        if ($passForm->isSubmitted() && $passForm->isValid()) {
+            $user->setPassword(
+                $passwordEncoder->encodePassword(
+                    $user,
+                    $passForm->get('password')->getData()
+                )
+            );
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('success', "Votre mot de passe a été modifié avec succès");
 
             return $this->redirectToRoute('user_show', ['id' => $user->getId()]);
         }
@@ -54,6 +73,10 @@ class UserController extends AbstractController
      */
     public function show(User $user): Response
     {
+        if ($user != $this->getUser()) {
+            throw $this->createAccessDeniedException('Access denied');
+        }
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);
@@ -64,6 +87,10 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user): Response
     {
+        if ($user != $this->getUser()) {
+            throw $this->createAccessDeniedException('Access denied');
+        }
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 

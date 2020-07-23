@@ -29,7 +29,7 @@ final class Version20200722124542 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('DROP TABLE category');
-        $this->addSql('DROP TABLE products');
+        $this->addSql('DROP TABLE product');
         $this->addSql('DROP TABLE user');
     }
 }

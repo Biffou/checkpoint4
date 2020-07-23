@@ -9,6 +9,7 @@ use App\Form\RegistrationFormType;
 use App\Form\UserType;
 use App\Repository\CategoryRepository;
 use App\Repository\UserRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/", name="admin_index")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function index(): Response
     {
@@ -41,11 +43,10 @@ class AdminController extends AbstractController
      * @param UserRepository $userRepository
      * @param Request $request
      * @return Response
+     * @Security("has_role('ROLE_ADMIN')")
      */
-    public function indexUsers(
-        UserRepository $userRepository,
-        Request $request
-    ): Response {
+    public function indexUsers(UserRepository $userRepository, Request $request): Response
+    {
         $users = $userRepository->findAll();
 
         return $this->render('admin/user/index.html.twig', [
@@ -57,6 +58,7 @@ class AdminController extends AbstractController
      * @Route("/users/{id}", name="admin_user_show", methods={"GET"})
      * @param User $user
      * @return Response
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function showUser(User $user): Response
     {
@@ -70,6 +72,7 @@ class AdminController extends AbstractController
      * @param Request $request
      * @param User $user
      * @return Response
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editUser(Request $request, User $user, UserPasswordEncoderInterface $passwordEncoder): Response
     {
@@ -129,6 +132,7 @@ class AdminController extends AbstractController
      * @Route("/category/", name="admin_category_index", methods={"GET"})
      * @param CategoryRepository $categoryRepository
      * @return Response
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function indexCategory(CategoryRepository $categoryRepository): Response
     {
@@ -141,6 +145,7 @@ class AdminController extends AbstractController
      * @Route("/category/{id}", name="admin_category_show", methods={"GET"})
      * @param Category $category
      * @return Response
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function showCategory(Category $category): Response
     {
@@ -154,6 +159,7 @@ class AdminController extends AbstractController
      * @param Request $request
      * @param Category $category
      * @return Response
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editCategory(Request $request, Category $category): Response
     {
@@ -177,6 +183,7 @@ class AdminController extends AbstractController
      * @param Request $request
      * @param Category $category
      * @return Response
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function deleteCategory(Request $request, Category $category): Response
     {
