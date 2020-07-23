@@ -3,11 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Product;
 use App\Entity\User;
 use App\Form\CategoryType;
+use App\Form\ProductType;
 use App\Form\RegistrationFormType;
 use App\Form\UserType;
 use App\Repository\CategoryRepository;
+use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +29,6 @@ use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
  */
 class AdminController extends AbstractController
 {
-
     /**
      * @Route("/", name="admin_index")
      * @Security("has_role('ROLE_ADMIN')")
@@ -194,6 +196,86 @@ class AdminController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_category_index');
+    }
+
+    //PRODUCTS//
+
+
+    /**
+     * @Route("/products/", name="admin_product_index", methods={"GET"})
+     * @param ProductRepository $productRepository
+     * @return Response
+     */
+    public function indexProduct(ProductRepository $productRepository): Response
+    {
+        $products = $productRepository->findAll();
+
+        return $this->render('admin/product/index.html.twig', [
+            'products' => $products
+        ]);
+    }
+
+    /**
+     * @Route("/new", name="admin_product_new", methods={"GET","POST"})
+     */
+    public function new(Request $request): Response
+    {
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($product);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin/product_index');
+        }
+
+        return $this->render('admin/product/new.html.twig', [
+            'product' => $product,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", name="admin_product_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Product $product
+     * @return Response
+     */
+    public function edit(Request $request, Product $product): Response
+    {
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('admin_product_index');
+        }
+
+        return $this->render('admin/product/edit.html.twig', [
+            'product' => $product,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="admin_product_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param Product $product
+     * @return Response
+     */
+    public function delete(Request $request, Product $product): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($product);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('admin_product_index');
     }
 }
 
