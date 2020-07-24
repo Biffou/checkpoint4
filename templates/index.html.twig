@@ -15,10 +15,13 @@
     {% for product in products %}
     <div class="col-4 mt-4">
         <div class="border border-dark rounded p-2 clearfix">
+            <h1>
+                {{ product.category.name }}
+            </h1>
             <h2>
-                Nom du produit
+                {{ product.name }}
             </h2>
-            <img class="img-fluid rounded" src="#" alt="Image de #">
+            <img class="img-fluid rounded" src="{{ product.photo }}" alt="Image de #">
             <hr>
             <form action="{{ path('cart_add', {'id': product.id}) }}" method="post">
                 <button type="submit" class="btn btn-success float-right">
