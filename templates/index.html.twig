@@ -10,6 +10,8 @@
     <body>
     <div class="jumbotron" style="background-image: url(https://carasaga.com/wp-content/uploads/2018/11/banniere_bijoux_4.jpg); background-size: 100%">
     </div>
+    <div class="container">
+    <div class="row">
     {% for product in products %}
     <div class="col-4 mt-4">
         <div class="border border-dark rounded p-2 clearfix">
@@ -26,5 +28,7 @@
         </div>
     </div>
     {% endfor %}
+    </div>
+    </div>
     </body>
 {% endblock %}
