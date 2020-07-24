@@ -205,6 +205,7 @@ class AdminController extends AbstractController
      * @Route("/products/", name="admin_product_index", methods={"GET"})
      * @param ProductRepository $productRepository
      * @return Response
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function indexProduct(ProductRepository $productRepository): Response
     {
@@ -217,6 +218,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/new", name="admin_product_new", methods={"GET","POST"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function new(Request $request): Response
     {
@@ -243,6 +245,7 @@ class AdminController extends AbstractController
      * @param Request $request
      * @param Product $product
      * @return Response
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function edit(Request $request, Product $product): Response
     {
@@ -266,6 +269,7 @@ class AdminController extends AbstractController
      * @param Request $request
      * @param Product $product
      * @return Response
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function delete(Request $request, Product $product): Response
     {
